@@ -136,34 +136,38 @@ func processMessage(cm *ClientMessage, commander Commander) {
 		switch string(cmd) {
 		case "SET":
 			value := messages[2]
+			fmt.Println(value)
 			_, err := commander.Set(cmd, key, value)
 			if err != nil {
-				cm.Client.Conn.Write([]byte(err.Error()))
+				reply := replies["ERROR"]
+				cm.Client.Conn.Write([]byte(reply))
 				return
 			}
 
-			reply := commands["SUCCESS"]
+			reply := replies["OK"]
 			cm.Client.Conn.Write([]byte(reply))
 			return
 		case "GET":
 			result, err := commander.Get(cmd, key)
 			if err != nil {
-				cm.Client.Conn.Write([]byte(err.Error()))
+				reply := replies["ERROR"]
+				cm.Client.Conn.Write([]byte(reply))
 				return
 			}
 
 			reply := result.Value
 			cm.Client.Conn.Write([]byte(reply))
-			cm.Client.Conn.Write([]byte("\r\n"))
+			cm.Client.Conn.Write([]byte("\x0D\x0A"))
 			return
 		case "DEL":
 			_, err := commander.Delete(cmd, key)
 			if err != nil {
-				cm.Client.Conn.Write([]byte(err.Error()))
+				reply := replies["ERROR"]
+				cm.Client.Conn.Write([]byte(reply))
 				return
 			}
 
-			reply := commands["SUCCESS"]
+			reply := replies["OK"]
 			cm.Client.Conn.Write([]byte(reply))
 			return
 		default:

@@ -13,7 +13,11 @@ var (
 		"GET":     "GET",
 		"DEL":     "DEL",
 		"PUBLISH": "PUBLISH",
-		"SUCCESS": "OK\r\n",
+	}
+
+	replies = map[string]string{
+		"OK":    "+OK\x0D\x0A",
+		"ERROR": "-ERROR\x0D\x0A",
 	}
 )
 
@@ -49,9 +53,8 @@ func (c *commander) Set(command, key, value []byte) (*Schema, error) {
 		return nil, errors.New(ErrorInvalidCommand)
 	}
 
-	// remove line feed (10)/ LF
-	value = bytes.Trim(value, "\n")
-	value = bytes.Trim(value, "\r")
+	// remove line feed and carnige return (13/10)/ CF/LF
+	value = bytes.Trim(value, "\x0D\x0A")
 
 	c.Lock()
 	newData := &Schema{Key: key, Value: value, Timestamp: time.Now()}
@@ -68,7 +71,7 @@ func (c *commander) Get(command, key []byte) (*Schema, error) {
 	}
 
 	// remove line feed and carnige return (13/10)/ CF/LF
-	key = bytes.Trim(key, "\r\n")
+	key = bytes.Trim(key, "\x0D\x0A")
 
 	c.RLock()
 	value, ok := c.db[string(key)]
@@ -87,7 +90,7 @@ func (c *commander) Delete(command, key []byte) (*Schema, error) {
 	}
 
 	// remove line feed and carnige return (13/10)/ CF/LF
-	key = bytes.Trim(key, "\r\n")
+	key = bytes.Trim(key, "\x0D\x0A")
 
 	c.RLock()
 	value, ok := c.db[string(key)]
