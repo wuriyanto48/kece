@@ -11,9 +11,9 @@ var (
 	commands = map[string]string{
 		"SET":     "SET",
 		"GET":     "GET",
+		"DEL":     "DEL",
 		"PUBLISH": "PUBLISH",
 		"SUCCESS": "OK\r\n",
-		"ERROR":   "ERROR\r\n",
 	}
 )
 
