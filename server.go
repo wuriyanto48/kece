@@ -1,6 +1,7 @@
 package kece
 
 import (
+	"bufio"
 	"fmt"
 	"net"
 	"sync"
@@ -55,4 +56,24 @@ func (server *Server) DeleteClient(key *Client) {
 	server.Lock()
 	delete(server.clients, key)
 	server.Unlock()
+}
+
+func (server *Server) serveClient() {
+
+	for {
+		select {
+		case client := <-server.register:
+			server.AddClient(client, true)
+			go func() {
+				for {
+					message, _ := bufio.NewReader(client.Conn).ReadBytes('\n')
+					fmt.Printf("Received message : %s", string(message))
+
+					m := "from server\n"
+					client.Conn.Write([]byte(m))
+				}
+			}()
+		}
+	}
+
 }
