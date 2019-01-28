@@ -1,6 +1,7 @@
 package kece
 
 import (
+	"bytes"
 	"errors"
 	"sync"
 	"time"
@@ -47,6 +48,9 @@ func (c *commander) Set(command, key, value []byte) (*Schema, error) {
 		return nil, errors.New(ErrorInvalidCommand)
 	}
 
+	// remove line feed (10)/ LF
+	value = bytes.Trim(value, "\n")
+
 	c.Lock()
 	newData := &Schema{Key: key, Value: value, Timestamp: time.Now()}
 	c.db[string(key)] = newData
@@ -60,6 +64,9 @@ func (c *commander) Get(command, key []byte) (*Schema, error) {
 	if !ok {
 		return nil, errors.New(ErrorInvalidCommand)
 	}
+
+	// remove line feed (10)/ LF
+	key = bytes.Trim(key, "\n")
 
 	c.RLock()
 	value, ok := c.db[string(key)]
