@@ -3,6 +3,7 @@ package kece
 import (
 	"errors"
 	"sync"
+	"time"
 )
 
 var (
@@ -10,41 +11,51 @@ var (
 		"SET":     "SET",
 		"GET":     "GET",
 		"PUBLISH": "PUBLISH",
+		"SUCCESS": "OK\r\n",
+		"ERROR":   "ERROR\r\n",
 	}
 )
 
+// Schema database
+type Schema struct {
+	Key       []byte
+	Value     []byte
+	Timestamp time.Time
+}
+
 // Commander interface
 type Commander interface {
-	Set(command, key, value []byte) ([]byte, error)
-	Get(command, key []byte) ([]byte, error)
+	Set(command, key, value []byte) (*Schema, error)
+	Get(command, key []byte) (*Schema, error)
 	Publish(topic string, command, value []byte) ([]byte, error)
 }
 
 // NewCommander function, Commander's constructor
-func NewCommander(db map[string][]byte) Commander {
+func NewCommander(db map[string]*Schema) Commander {
 	return &commander{db: db}
 }
 
 type commander struct {
-	db map[string][]byte
+	db map[string]*Schema
 	sync.RWMutex
 }
 
 // Set will set value to db
-func (c *commander) Set(command, key, value []byte) ([]byte, error) {
+func (c *commander) Set(command, key, value []byte) (*Schema, error) {
 	_, ok := commands[string(command)]
 	if !ok {
 		return nil, errors.New(ErrorInvalidCommand)
 	}
 
 	c.Lock()
-	c.db[string(key)] = value
+	newData := &Schema{Key: key, Value: value, Timestamp: time.Now()}
+	c.db[string(key)] = newData
 	c.Unlock()
-	return value, nil
+	return newData, nil
 }
 
 // Get will get value from db
-func (c *commander) Get(command, key []byte) ([]byte, error) {
+func (c *commander) Get(command, key []byte) (*Schema, error) {
 	_, ok := commands[string(command)]
 	if !ok {
 		return nil, errors.New(ErrorInvalidCommand)
