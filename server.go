@@ -9,13 +9,14 @@ import (
 
 // Server struct
 type Server struct {
-	clients    map[*Client]bool
-	listener   net.Listener
-	network    string
-	port       string
-	register   chan *Client
-	unregister chan *Client
-	publish    chan []byte
+	clients       map[*Client]bool
+	listener      net.Listener
+	network       string
+	port          string
+	register      chan *Client
+	unregister    chan *Client
+	publish       chan []byte
+	clientMessage chan *ClientMessage
 	sync.RWMutex
 }
 
@@ -25,13 +26,15 @@ func NewServer(network, port string) *Server {
 	register := make(chan *Client)
 	unregister := make(chan *Client)
 	publish := make(chan []byte)
+	clientMessage := make(chan *ClientMessage)
 	return &Server{
-		network:    network,
-		port:       port,
-		clients:    clients,
-		register:   register,
-		unregister: unregister,
-		publish:    publish,
+		network:       network,
+		port:          port,
+		clients:       clients,
+		register:      register,
+		unregister:    unregister,
+		publish:       publish,
+		clientMessage: clientMessage,
 	}
 }
 
@@ -71,17 +74,20 @@ func (server *Server) serveClient() {
 						server.unregister <- client
 						break
 					}
-					fmt.Printf("Received message : %s", string(message))
 
-					m := "from server\n"
-					client.Conn.Write([]byte(m))
+					server.clientMessage <- &ClientMessage{Client: client, Message: message}
 				}
 			}()
 		case client := <-server.unregister:
 			if _, ok := server.clients[client]; ok {
-				fmt.Printf("client %s unregister\n", client.ID)
+				fmt.Printf("client %s unregister its connection\n", client.ID)
 				server.deleteClient(client)
 			}
+		case clientMessage := <-server.clientMessage:
+			fmt.Printf("Received message : %s from %s\n", string(clientMessage.Message), clientMessage.Client.ID)
+
+			reply := fmt.Sprintf("to %s hello client\n", clientMessage.Client.ID)
+			clientMessage.Client.Conn.Write([]byte(reply))
 		}
 	}
 
@@ -107,6 +113,7 @@ func (server *Server) Start() error {
 			panic(err)
 		}
 
+		//register to every connected client to DB
 		server.register <- &Client{ID: c.RemoteAddr().String(), Conn: c}
 	}
 
