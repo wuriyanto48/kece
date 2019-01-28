@@ -7,14 +7,6 @@ import (
 	"sync"
 )
 
-var (
-	commands = map[string]string{
-		"SET":     "SET",
-		"GET":     "GET",
-		"PUBLISH": "PUBLISH",
-	}
-)
-
 // Server struct
 type Server struct {
 	clients    map[*Client]bool
@@ -43,16 +35,16 @@ func NewServer(network, port string) *Server {
 	}
 }
 
-//AddClient function will push new client to the map clients
-func (server *Server) AddClient(key *Client, b bool) {
+//addClient function will push new client to the map clients
+func (server *Server) addClient(key *Client, b bool) {
 	server.Lock()
 	fmt.Printf("log -> new client connected %s\n", key.ID)
 	server.clients[key] = b
 	server.Unlock()
 }
 
-//DeleteClient function will delete client by specific key from map clients
-func (server *Server) DeleteClient(key *Client) {
+//deleteClient function will delete client by specific key from map clients
+func (server *Server) deleteClient(key *Client) {
 	server.Lock()
 	delete(server.clients, key)
 	server.Unlock()
@@ -63,22 +55,39 @@ func (server *Server) serveClient() {
 	for {
 		select {
 		case client := <-server.register:
-			server.AddClient(client, true)
+			// register client to client collection
+			server.addClient(client, true)
+
+			// handle message from client
 			go func() {
+				defer func() {
+					client.Conn.Close()
+					server.unregister <- client
+				}()
+
 				for {
-					message, _ := bufio.NewReader(client.Conn).ReadBytes('\n')
+					message, err := bufio.NewReader(client.Conn).ReadBytes('\n')
+					if err != nil {
+						server.unregister <- client
+						break
+					}
 					fmt.Printf("Received message : %s", string(message))
 
 					m := "from server\n"
 					client.Conn.Write([]byte(m))
 				}
 			}()
+		case client := <-server.unregister:
+			if _, ok := server.clients[client]; ok {
+				fmt.Printf("client %s unregister\n", client.ID)
+				server.deleteClient(client)
+			}
 		}
 	}
 
 }
 
-// Start function
+// Start function, start Kece server
 func (server *Server) Start() error {
 	listener, err := net.Listen(server.network, fmt.Sprintf(":%s", server.port))
 	if err != nil {
@@ -89,6 +98,7 @@ func (server *Server) Start() error {
 
 	defer listener.Close()
 
+	// handle client concurrently
 	go server.serveClient()
 
 	for {
