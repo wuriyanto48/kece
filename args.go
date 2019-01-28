@@ -38,7 +38,7 @@ func ParseArgs() (*Arguments, error) {
 
 		fmt.Fprintln(os.Stderr, "	-net | --net", "network type eg: -net tcp")
 		fmt.Fprintln(os.Stderr, "	-port | --port", "port to listen eg: -port 9000")
-		fmt.Fprintln(os.Stderr, "	-v | --version", "show ngos version")
+		fmt.Fprintln(os.Stderr, "	-v | --version", "show kece version")
 
 	}
 
