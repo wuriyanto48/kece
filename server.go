@@ -77,3 +77,27 @@ func (server *Server) serveClient() {
 	}
 
 }
+
+// Start function
+func (server *Server) Start() error {
+	listener, err := net.Listen(server.network, fmt.Sprintf(":%s", server.port))
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("log -> kece server listen on port :", server.port)
+
+	defer listener.Close()
+
+	go server.serveClient()
+
+	for {
+		c, err := listener.Accept()
+		if err != nil {
+			panic(err)
+		}
+
+		server.register <- &Client{ID: c.RemoteAddr().String(), Conn: c}
+	}
+
+}
