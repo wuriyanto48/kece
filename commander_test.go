@@ -1,6 +1,7 @@
 package kece
 
 import (
+	"bytes"
 	"testing"
 )
 
@@ -13,13 +14,15 @@ func TestCommander(t *testing.T) {
 		value := []byte("wuriyanto")
 		command := []byte("SET")
 
+		expectedValue := []byte("wuriyanto")
+
 		newValue, err := cmd.Set(command, key, value)
 
 		if err != nil {
 			t.Error("command is not valid")
 		}
 
-		if string(newValue.Value) != "wuriyanto" {
+		if !bytes.Equal(newValue.Value, expectedValue) {
 			t.Error("new value is not equal to value")
 		}
 	})
@@ -35,7 +38,7 @@ func TestCommander(t *testing.T) {
 			t.Error(err.Error())
 		}
 
-		if string(value.Value) != string(expectedValue) {
+		if !bytes.Equal(value.Value, expectedValue) {
 			t.Error("value is not equal to expected value")
 		}
 	})
