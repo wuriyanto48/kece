@@ -35,7 +35,7 @@ func (c *ClientMessage) ValidateMessage() error {
 		return errors.New(ErrorInvalidCommand)
 	}
 
-	if command == "GET" {
+	if command == "GET" || command == "DEL" {
 		if len(messages) < 2 || len(messages) > 2 {
 			return errors.New(ErrorInvalidOperation)
 		}
