@@ -5,7 +5,7 @@ import (
 )
 
 func TestCommander(t *testing.T) {
-	db := make(map[string][]byte)
+	db := make(map[string]*Schema)
 	cmd := NewCommander(db)
 
 	t.Run("should success SET new value to db", func(t *testing.T) {
@@ -19,7 +19,7 @@ func TestCommander(t *testing.T) {
 			t.Error(err.Error())
 		}
 
-		if string(newValue) != "wuriyanto" {
+		if string(newValue.Value) != "wuriyanto" {
 			t.Error("new value is not equal to value")
 		}
 	})
@@ -35,7 +35,7 @@ func TestCommander(t *testing.T) {
 			t.Error(err.Error())
 		}
 
-		if string(value) != string(expectedValue) {
+		if string(value.Value) != string(expectedValue) {
 			t.Error("value is not equal to expected value")
 		}
 	})
