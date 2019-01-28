@@ -1,6 +1,7 @@
 package kece
 
 import (
+	"fmt"
 	"net"
 	"sync"
 )
@@ -39,4 +40,19 @@ func NewServer(network, port string) *Server {
 		unregister: unregister,
 		publish:    publish,
 	}
+}
+
+//AddClient function will push new client to the map clients
+func (server *Server) AddClient(key *Client, b bool) {
+	server.Lock()
+	fmt.Printf("log -> new client connected %s\n", key.ID)
+	server.clients[key] = b
+	server.Unlock()
+}
+
+//DeleteClient function will delete client by specific key from map clients
+func (server *Server) DeleteClient(key *Client) {
+	server.Lock()
+	delete(server.clients, key)
+	server.Unlock()
 }
