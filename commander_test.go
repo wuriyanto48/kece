@@ -16,7 +16,7 @@ func TestCommander(t *testing.T) {
 		newValue, err := cmd.Set(command, key, value)
 
 		if err != nil {
-			t.Error(err.Error())
+			t.Error("command is not valid")
 		}
 
 		if string(newValue.Value) != "wuriyanto" {
@@ -37,6 +37,37 @@ func TestCommander(t *testing.T) {
 
 		if string(value.Value) != string(expectedValue) {
 			t.Error("value is not equal to expected value")
+		}
+	})
+
+	t.Run("should error SET new value to db with invalid command", func(t *testing.T) {
+		key := []byte("1")
+		value := []byte("wuriyanto")
+		command := []byte("ET")
+
+		newValue, err := cmd.Set(command, key, value)
+
+		if err == nil {
+			t.Error("command should invalid")
+		}
+
+		if newValue != nil {
+			t.Error("new value should be nil")
+		}
+	})
+
+	t.Run("should error GET value from db with invalid command", func(t *testing.T) {
+		key := []byte("1")
+		command := []byte("ET")
+
+		value, err := cmd.Get(command, key)
+
+		if err == nil {
+			t.Error("command is not valid")
+		}
+
+		if value != nil {
+			t.Error("value should be nil")
 		}
 	})
 }
