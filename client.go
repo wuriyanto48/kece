@@ -1,6 +1,8 @@
 package kece
 
 import (
+	"bytes"
+	"errors"
 	"net"
 )
 
@@ -20,4 +22,16 @@ func (client *Client) Subscribe(topic string) {
 type ClientMessage struct {
 	Client  *Client
 	Message []byte
+}
+
+// ValidateMessage function
+func (c *ClientMessage) ValidateMessage() error {
+	message := bytes.Trim(c.Message, " ")
+	messages := bytes.Split(message, []byte(" "))
+	if len(messages) < 3 || len(messages) > 3 {
+		return errors.New(ErrorInvalidOperation)
+	}
+
+	c.Message = message
+	return nil
 }
