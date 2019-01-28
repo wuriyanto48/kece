@@ -5,6 +5,14 @@ import (
 	"sync"
 )
 
+var (
+	commands = map[string]string{
+		"SET":     "SET",
+		"GET":     "GET",
+		"PUBLISH": "PUBLISH",
+	}
+)
+
 // Server struct
 type Server struct {
 	clients    map[*Client]bool
