@@ -10,10 +10,13 @@ type Client struct {
 	Conn net.Conn
 }
 
-func (client *Client) Read() {
+// Subscribe client method, this function will used by client to subscribe to specific topic
+func (client *Client) Subscribe(topic string) {
 
 }
 
-func (client *Client) Subscribe(topic string) {
-
+// ClientMessage struct
+type ClientMessage struct {
+	Client  *Client
+	Message []byte
 }
