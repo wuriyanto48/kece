@@ -2,6 +2,7 @@ package kece
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"net"
 	"sync"
@@ -17,11 +18,12 @@ type Server struct {
 	unregister    chan *Client
 	publish       chan []byte
 	clientMessage chan *ClientMessage
+	commander     Commander
 	sync.RWMutex
 }
 
-// NewServer function
-func NewServer(network, port string) *Server {
+// NewServer function, Server's constructor
+func NewServer(network, port string, commander Commander) *Server {
 	clients := make(map[*Client]bool)
 	register := make(chan *Client)
 	unregister := make(chan *Client)
@@ -35,6 +37,7 @@ func NewServer(network, port string) *Server {
 		unregister:    unregister,
 		publish:       publish,
 		clientMessage: clientMessage,
+		commander:     commander,
 	}
 }
 
@@ -86,8 +89,7 @@ func (server *Server) serveClient() {
 		case clientMessage := <-server.clientMessage:
 			fmt.Printf("Received message : %s from %s\n", string(clientMessage.Message), clientMessage.Client.ID)
 
-			reply := fmt.Sprintf("to %s hello client\n", clientMessage.Client.ID)
-			clientMessage.Client.Conn.Write([]byte(reply))
+			go processMessage(clientMessage, server.commander)
 		}
 	}
 
@@ -104,7 +106,7 @@ func (server *Server) Start() error {
 
 	defer listener.Close()
 
-	// handle client concurrently
+	// handle concurrent client
 	go server.serveClient()
 
 	for {
@@ -117,4 +119,56 @@ func (server *Server) Start() error {
 		server.register <- &Client{ID: c.RemoteAddr().String(), Conn: c}
 	}
 
+}
+
+func processMessage(cm *ClientMessage, commander Commander) {
+	for {
+		if err := cm.ValidateMessage(); err != nil {
+			cm.Client.Conn.Write([]byte(err.Error()))
+			return
+		}
+
+		messages := bytes.Split(cm.Message, []byte(" "))
+
+		cmd := messages[0]
+		key := messages[1]
+
+		switch string(cmd) {
+		case "SET":
+			value := messages[2]
+			_, err := commander.Set(cmd, key, value)
+			if err != nil {
+				cm.Client.Conn.Write([]byte(err.Error()))
+				return
+			}
+
+			reply := commands["SUCCESS"]
+			cm.Client.Conn.Write([]byte(reply))
+			return
+		case "GET":
+			result, err := commander.Get(cmd, key)
+			if err != nil {
+				cm.Client.Conn.Write([]byte(err.Error()))
+				return
+			}
+
+			reply := result.Value
+			cm.Client.Conn.Write([]byte(reply))
+			cm.Client.Conn.Write([]byte("\r\n"))
+			return
+		case "DEL":
+			_, err := commander.Delete(cmd, key)
+			if err != nil {
+				cm.Client.Conn.Write([]byte(err.Error()))
+				return
+			}
+
+			reply := commands["SUCCESS"]
+			cm.Client.Conn.Write([]byte(reply))
+			return
+		default:
+			cm.Client.Conn.Write([]byte(ErrorInvalidCommand))
+			return
+		}
+	}
 }
