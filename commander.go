@@ -28,6 +28,7 @@ type Schema struct {
 type Commander interface {
 	Set(command, key, value []byte) (*Schema, error)
 	Get(command, key []byte) (*Schema, error)
+	Delete(command, key []byte) (*Schema, error)
 	Publish(topic string, command, value []byte) ([]byte, error)
 }
 
@@ -73,6 +74,26 @@ func (c *commander) Get(command, key []byte) (*Schema, error) {
 	if !ok {
 		return nil, errors.New(ErrorEmptyValue)
 	}
+	c.RUnlock()
+	return value, nil
+}
+
+// Delete will get value from db
+func (c *commander) Delete(command, key []byte) (*Schema, error) {
+	_, ok := commands[string(command)]
+	if !ok {
+		return nil, errors.New(ErrorInvalidCommand)
+	}
+
+	// remove line feed (10)/ LF
+	key = bytes.Trim(key, "\n")
+
+	c.RLock()
+	value, ok := c.db[string(key)]
+	if !ok {
+		return nil, errors.New(ErrorEmptyValue)
+	}
+	delete(c.db, string(key))
 	c.RUnlock()
 	return value, nil
 }
