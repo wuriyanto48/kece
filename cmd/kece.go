@@ -22,4 +22,11 @@ func main() {
 		fmt.Printf("\033[35m%s version %s (runtime: %s)\033[0m%s", os.Args[0], kece.Version, runtime.Version(), "\n")
 		os.Exit(0)
 	}
+
+	server := kece.NewServer(args.Network, args.Port)
+
+	if err := server.Start(); err != nil {
+		fmt.Printf("\033[31m%s\033[0m%s", err.Error(), "\n")
+		os.Exit(1)
+	}
 }
