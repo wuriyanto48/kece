@@ -23,7 +23,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	server := kece.NewServer(args.Network, args.Port)
+	server := kece.NewServer(args.Network, args.Port, nil)
 
 	if err := server.Start(); err != nil {
 		fmt.Printf("\033[31m%s\033[0m%s", err.Error(), "\n")
