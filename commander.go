@@ -51,6 +51,7 @@ func (c *commander) Set(command, key, value []byte) (*Schema, error) {
 
 	// remove line feed (10)/ LF
 	value = bytes.Trim(value, "\n")
+	value = bytes.Trim(value, "\r")
 
 	c.Lock()
 	newData := &Schema{Key: key, Value: value, Timestamp: time.Now()}
