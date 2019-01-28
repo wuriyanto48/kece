@@ -11,6 +11,7 @@ type Client struct {
 }
 
 // Subscribe client method, this function will used by client to subscribe to specific topic
+//TODO
 func (client *Client) Subscribe(topic string) {
 
 }
