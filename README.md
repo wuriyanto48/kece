@@ -41,6 +41,9 @@ $ wurianto
 $
 $ GET *BJE*
 $ bhinneka
+
+$ DEL 1
+$ OK
 ```
 
 
