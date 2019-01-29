@@ -3,6 +3,7 @@ package kece
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"net"
 	"sync"
@@ -12,8 +13,7 @@ import (
 type Server struct {
 	clients       map[*Client]bool
 	listener      net.Listener
-	network       string
-	port          string
+	args          *Arguments
 	register      chan *Client
 	unregister    chan *Client
 	publish       chan []byte
@@ -23,15 +23,14 @@ type Server struct {
 }
 
 // NewServer function, Server's constructor
-func NewServer(network, port string, commander Commander) *Server {
+func NewServer(args *Arguments, commander Commander) *Server {
 	clients := make(map[*Client]bool)
 	register := make(chan *Client)
 	unregister := make(chan *Client)
 	publish := make(chan []byte)
 	clientMessage := make(chan *ClientMessage)
 	return &Server{
-		network:       network,
-		port:          port,
+		args:          args,
 		clients:       clients,
 		register:      register,
 		unregister:    unregister,
@@ -89,7 +88,7 @@ func (server *Server) serveClient() {
 		case clientMessage := <-server.clientMessage:
 			fmt.Printf("Received message : %s from %s\n", string(clientMessage.Message), clientMessage.Client.ID)
 
-			go processMessage(clientMessage, server.commander)
+			go processMessage(clientMessage, server.commander, server.args.Auth)
 		}
 	}
 
@@ -97,12 +96,12 @@ func (server *Server) serveClient() {
 
 // Start function, start Kece server
 func (server *Server) Start() error {
-	listener, err := net.Listen(server.network, fmt.Sprintf(":%s", server.port))
+	listener, err := net.Listen(server.args.Network, fmt.Sprintf(":%s", server.args.Port))
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("log -> kece server listen on port :", server.port)
+	fmt.Println("log -> kece server listen on port :", server.args.Port)
 
 	defer listener.Close()
 
@@ -129,7 +128,26 @@ func (server *Server) Start() error {
 
 }
 
-func processMessage(cm *ClientMessage, commander Commander) {
+func validateAuth(cm *ClientMessage, commander Commander, auth string) error {
+	if err := cm.ValidateMessage(); err != nil {
+		return err
+	}
+
+	clientID := cm.Client.ID
+
+	result, err := commander.Get([]byte(commands["GET"]), []byte(clientID))
+	if err != nil {
+		return errors.New(ErrorInvalidAuth)
+	}
+
+	if !bytes.Equal([]byte(auth), result.Value) {
+		return errors.New(ErrorInvalidAuth)
+	}
+
+	return nil
+}
+
+func processMessage(cm *ClientMessage, commander Commander, auth string) {
 	for {
 		if err := cm.ValidateMessage(); err != nil {
 			cm.Client.Conn.Write([]byte(err.Error()))
@@ -142,7 +160,40 @@ func processMessage(cm *ClientMessage, commander Commander) {
 		key := messages[1]
 
 		switch string(cmd) {
+		case commands["AUTH"]:
+			value := messages[1]
+			value = bytes.Trim(value, crlf)
+			if len(auth) <= 0 {
+				reply := replies["ERROR"]
+				cm.Client.Conn.Write([]byte(reply))
+				return
+			}
+
+			if !bytes.Equal([]byte(auth), value) {
+				cm.Client.Conn.Write([]byte(ErrorInvalidAuth))
+				return
+			}
+
+			key = []byte(cm.Client.ID)
+
+			err := commander.Auth(cmd, key, value)
+			if err != nil {
+				reply := replies["ERROR"]
+				cm.Client.Conn.Write([]byte(reply))
+				return
+			}
+
+			reply := replies["OK"]
+			cm.Client.Conn.Write([]byte(reply))
+			return
 		case commands["SET"]:
+			if len(auth) > 0 {
+				if err := validateAuth(cm, commander, auth); err != nil {
+					cm.Client.Conn.Write([]byte(err.Error()))
+					return
+				}
+			}
+
 			value := messages[2]
 			_, err := commander.Set(cmd, key, value)
 			if err != nil {
@@ -155,6 +206,13 @@ func processMessage(cm *ClientMessage, commander Commander) {
 			cm.Client.Conn.Write([]byte(reply))
 			return
 		case commands["GET"]:
+			if len(auth) > 0 {
+				if err := validateAuth(cm, commander, auth); err != nil {
+					cm.Client.Conn.Write([]byte(err.Error()))
+					return
+				}
+			}
+
 			result, err := commander.Get(cmd, key)
 			if err != nil {
 				reply := replies["ERROR"]
@@ -167,6 +225,13 @@ func processMessage(cm *ClientMessage, commander Commander) {
 			cm.Client.Conn.Write([]byte(crlf))
 			return
 		case commands["DEL"]:
+			if len(auth) > 0 {
+				if err := validateAuth(cm, commander, auth); err != nil {
+					cm.Client.Conn.Write([]byte(err.Error()))
+					return
+				}
+			}
+
 			_, err := commander.Delete(cmd, key)
 			if err != nil {
 				reply := replies["ERROR"]
