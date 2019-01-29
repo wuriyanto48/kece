@@ -31,10 +31,10 @@ $ kece -port 8000
 $ nc localhost 8000
 $
 $ SET 1 wuriyanto
-$ OK
+$ +OK
 $
 $ SET *BJE* bhinneka
-$ OK
+$ +OK
 $
 $ GET 1
 $ wurianto
@@ -43,7 +43,21 @@ $ GET *BJE*
 $ bhinneka
 $
 $ DEL 1
-$ OK
+$ +OK
+```
+
+- Auth mechanism
+
+    if you want to use `Auth` on your `kece server`, simply add `-auth your-server-password` when start your server
+```shell
+$ kece -port 8000 -auth my-secret
+```
+
+    send auth to server
+```shell
+$ AUTH my-secret
+$ +OK
+$
 ```
 
 
