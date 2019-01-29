@@ -102,7 +102,7 @@ func (server *Server) Start() error {
 	}
 
 	fmt.Printf("%s\n", Banner)
-	fmt.Println("log -> kece server listen on port :", server.args.Port)
+	fmt.Printf("log -> kece server listen on port : %s\n", server.args.Port)
 
 	defer listener.Close()
 
