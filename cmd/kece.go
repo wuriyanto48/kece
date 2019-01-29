@@ -31,7 +31,7 @@ func main() {
 	commander := kece.NewCommander(db)
 
 	// call kece constructor
-	server := kece.NewServer(args.Network, args.Port, commander)
+	server := kece.NewServer(args, commander)
 
 	if err := server.Start(); err != nil {
 		fmt.Printf("\033[31m%s\033[0m%s", err.Error(), "\n")
