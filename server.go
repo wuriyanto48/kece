@@ -106,18 +106,26 @@ func (server *Server) Start() error {
 
 	defer listener.Close()
 
+	done := make(chan bool)
 	// handle concurrent client
 	go server.serveClient()
 
-	for {
-		c, err := listener.Accept()
-		if err != nil {
-			panic(err)
-		}
+	// handle concurrent incoming client
+	go func() {
+		for {
+			c, err := listener.Accept()
+			if err != nil {
+				panic(err)
+			}
 
-		//register to every connected client to DB
-		server.register <- &Client{ID: c.RemoteAddr().String(), Conn: c}
-	}
+			//register to every connected client to DB
+			server.register <- &Client{ID: c.RemoteAddr().String(), Conn: c}
+		}
+	}()
+
+	<-done
+
+	return nil
 
 }
 
