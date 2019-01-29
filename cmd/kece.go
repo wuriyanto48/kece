@@ -24,17 +24,25 @@ func main() {
 		os.Exit(0)
 	}
 
-	// create the global database
-	db := make(map[string]*kece.Schema)
-
-	// call commander constructor
-	commander := kece.NewCommander(db)
+	var commander kece.Commander
+	switch args.DataStorageType {
+	case kece.HashMap:
+		// create the global database
+		db := make(map[string]*kece.Schema)
+		// call commander constructor
+		commander = kece.NewCommander(db)
+	case kece.BinarySearchTree:
+		commander = kece.NewCommanderBST()
+	default:
+		fmt.Printf("\033[31minvalid data storage type\033[0m\n")
+		os.Exit(1)
+	}
 
 	// call kece constructor
 	server := kece.NewServer(args, commander)
 
 	if err := server.Start(); err != nil {
-		fmt.Printf("\033[31m%s\033[0m%s", err.Error(), "\n")
+		fmt.Printf("\033[31m%s\033[0m\n", err.Error())
 		os.Exit(1)
 	}
 }

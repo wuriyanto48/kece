@@ -22,25 +22,28 @@ const (
 
 // Arguments struct will hold flag and arguments from stdin
 type Arguments struct {
-	Auth        string
-	Network     string
-	Port        string
-	ShowVersion bool
-	Help        func()
+	Auth            string
+	Network         string
+	Port            string
+	DataStorageType string
+	ShowVersion     bool
+	Help            func()
 }
 
 // ParseArgs function, this function will parse flag and arguments from stdin to Arguments struct
 func ParseArgs() (*Arguments, error) {
 	var (
-		auth        string
-		network     string
-		port        string
-		showVersion bool
+		auth            string
+		network         string
+		port            string
+		dataStorageType string
+		showVersion     bool
 	)
 
 	flag.StringVar(&auth, "auth", "", "set server auth eg: -net tcp")
 	flag.StringVar(&network, "net", "tcp", "network type eg: -net tcp")
 	flag.StringVar(&port, "port", "9000", "port to listen eg: -port 9000")
+	flag.StringVar(&dataStorageType, "ds", HashMap, "data storage type (hashmap or BST)")
 
 	flag.BoolVar(&showVersion, "version", false, "show version")
 	flag.BoolVar(&showVersion, "v", false, "show version")
@@ -51,15 +54,16 @@ func ParseArgs() (*Arguments, error) {
 		fmt.Fprintln(os.Stderr, "")
 		fmt.Fprintln(os.Stderr, "    Kece (an Experimental Distributed Key Value Store)   ")
 		fmt.Fprintln(os.Stderr, "")
-		fmt.Fprintln(os.Stderr, "	-net | --net", "network type eg: -net tcp")
+		fmt.Fprintln(os.Stderr, "	-net  | --net", "network type eg: -net tcp")
 		fmt.Fprintln(os.Stderr, "	-port | --port", "port to listen eg: -port 9000")
 		fmt.Fprintln(os.Stderr, "	-auth | --auth", "if you want to client send auth before exchange data")
-		fmt.Fprintln(os.Stderr, "	-v | --version", "show kece version")
-		fmt.Fprintln(os.Stderr, "	-h | --help", "show help and usage")
+		fmt.Fprintln(os.Stderr, "	-ds   | --ds", "data storage type (hashmap or bst)")
+		fmt.Fprintln(os.Stderr, "	-v    | --version", "show kece version")
+		fmt.Fprintln(os.Stderr, "	-h    | --help", "show help and usage")
 		fmt.Fprintln(os.Stderr, "")
 		fmt.Fprintln(os.Stderr, "   **-----------------------------------------------**   ")
 		fmt.Fprintln(os.Stderr, "   Running: ")
-		fmt.Fprintln(os.Stderr, "   kece -port 8000 -net tcp")
+		fmt.Fprintln(os.Stderr, "   kece -port 8000 -net tcp -ds bst")
 		fmt.Fprintln(os.Stderr, "")
 
 	}
@@ -75,10 +79,11 @@ func ParseArgs() (*Arguments, error) {
 	}
 
 	return &Arguments{
-		Auth:        auth,
-		Network:     network,
-		Port:        port,
-		ShowVersion: showVersion,
-		Help:        flag.Usage,
+		Auth:            auth,
+		Network:         network,
+		Port:            port,
+		DataStorageType: dataStorageType,
+		ShowVersion:     showVersion,
+		Help:            flag.Usage,
 	}, nil
 }
