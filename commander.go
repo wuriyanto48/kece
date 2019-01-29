@@ -9,6 +9,7 @@ import (
 
 var (
 	commands = map[string]string{
+		"AUTH":    "\x41\x55\x54\x48",
 		"SET":     "\x53\x45\x54",
 		"GET":     "\x47\x45\x54",
 		"DEL":     "\x44\x45\x4C",
@@ -36,6 +37,7 @@ type Schema struct {
 
 // Commander interface
 type Commander interface {
+	Auth(command, key, value []byte) error
 	Set(command, key, value []byte) (*Schema, error)
 	Get(command, key []byte) (*Schema, error)
 	Delete(command, key []byte) (*Schema, error)
@@ -49,6 +51,25 @@ func NewCommander(db map[string]*Schema) Commander {
 
 type commander struct {
 	db map[string]*Schema
+}
+
+// Auth will set auth to kece server
+// TODO
+func (c *commander) Auth(command, key, value []byte) error {
+	_, ok := commands[string(command)]
+	if !ok {
+		return errors.New(ErrorInvalidCommand)
+	}
+
+	// remove line feed and carriage return (13/10)/ CF/LF
+	key = bytes.Trim(key, crlf)
+	value = bytes.Trim(value, crlf)
+
+	lock.Lock()
+	defer lock.Unlock()
+	newData := &Schema{Key: key, Value: value, Timestamp: time.Now()}
+	c.db[string(key)] = newData
+	return nil
 }
 
 // Set will set value to db
