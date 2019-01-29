@@ -23,6 +23,8 @@ var (
 	crlf = "\x0D\x0A"
 	cr   = "\x0D"
 	lf   = "\x0A"
+
+	lock = &sync.Mutex{}
 )
 
 // Schema database
@@ -47,7 +49,6 @@ func NewCommander(db map[string]*Schema) Commander {
 
 type commander struct {
 	db map[string]*Schema
-	sync.RWMutex
 }
 
 // Set will set value to db
@@ -58,12 +59,14 @@ func (c *commander) Set(command, key, value []byte) (*Schema, error) {
 	}
 
 	// remove line feed and carnige return (13/10)/ CF/LF
+	key = bytes.Trim(key, crlf)
 	value = bytes.Trim(value, crlf)
 
-	c.Lock()
+	lock.Lock()
+	defer lock.Unlock()
 	newData := &Schema{Key: key, Value: value, Timestamp: time.Now()}
 	c.db[string(key)] = newData
-	c.Unlock()
+
 	return newData, nil
 }
 
@@ -77,12 +80,12 @@ func (c *commander) Get(command, key []byte) (*Schema, error) {
 	// remove line feed and carnige return (13/10)/ CF/LF
 	key = bytes.Trim(key, crlf)
 
-	c.RLock()
+	lock.Lock()
+	defer lock.Unlock()
 	value, ok := c.db[string(key)]
 	if !ok {
 		return nil, errors.New(ErrorEmptyValue)
 	}
-	c.RUnlock()
 	return value, nil
 }
 
@@ -96,13 +99,13 @@ func (c *commander) Delete(command, key []byte) (*Schema, error) {
 	// remove line feed and carnige return (13/10)/ CF/LF
 	key = bytes.Trim(key, crlf)
 
-	c.RLock()
+	lock.Lock()
+	defer lock.Unlock()
 	value, ok := c.db[string(key)]
 	if !ok {
 		return nil, errors.New(ErrorEmptyValue)
 	}
 	delete(c.db, string(key))
-	c.RUnlock()
 	return value, nil
 }
 
