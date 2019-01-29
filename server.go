@@ -134,9 +134,8 @@ func processMessage(cm *ClientMessage, commander Commander) {
 		key := messages[1]
 
 		switch string(cmd) {
-		case "SET":
+		case commands["SET"]:
 			value := messages[2]
-			fmt.Println(value)
 			_, err := commander.Set(cmd, key, value)
 			if err != nil {
 				reply := replies["ERROR"]
@@ -147,7 +146,7 @@ func processMessage(cm *ClientMessage, commander Commander) {
 			reply := replies["OK"]
 			cm.Client.Conn.Write([]byte(reply))
 			return
-		case "GET":
+		case commands["GET"]:
 			result, err := commander.Get(cmd, key)
 			if err != nil {
 				reply := replies["ERROR"]
@@ -157,9 +156,9 @@ func processMessage(cm *ClientMessage, commander Commander) {
 
 			reply := result.Value
 			cm.Client.Conn.Write([]byte(reply))
-			cm.Client.Conn.Write([]byte("\x0D\x0A"))
+			cm.Client.Conn.Write([]byte(crlf))
 			return
-		case "DEL":
+		case commands["DEL"]:
 			_, err := commander.Delete(cmd, key)
 			if err != nil {
 				reply := replies["ERROR"]
