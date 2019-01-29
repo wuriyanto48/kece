@@ -22,6 +22,12 @@ $ kece --version
     if `port flag` is not present, `kece` will using `9000` as the default port
 ```shell
 $ kece -port 8000
+ _  __ _____  ______  _____
+| |/ /| |__| |   ___|| |__| |
+| |\ \| |___ |  |    | |___
+|____________|_____________**%**
+
+log -> kece server listen on port : 8000
 ```
 
 - Store simple data
@@ -51,6 +57,12 @@ $ +OK
     if you want to use `Auth` on your `kece server`, simply add `-auth your-server-password` when start your server
 ```shell
 $ kece -port 8000 -auth my-secret
+ _  __ _____  ______  _____
+| |/ /| |__| |   ___|| |__| |
+| |\ \| |___ |  |    | |___
+|____________|_____________**%**
+
+log -> kece server listen on port : 8000
 ```
 
     send auth to server
