@@ -30,6 +30,12 @@ $ kece -port 8000
 log -> kece server listen on port : 8000
 ```
 
+- There are two type of data structure for store data, `HashMap` and `Binary Search Tree` (default using `HashMap`). For choose data structure type, add flag `-ds`.
+```shell
+$ kece -ds bst
+$ kece -ds hashmap
+```
+
 - Store simple data
     
     you can use either `nc` or `telnet` as the client
@@ -77,3 +83,6 @@ $
 
 ### Author
 Wuriyanto https://github.com/wuriyanto48
+
+### Contributor
+Agung Dwi Prasetyo https://github.com/agungdwiprasetyo
