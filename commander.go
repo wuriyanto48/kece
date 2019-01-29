@@ -58,7 +58,7 @@ func (c *commander) Set(command, key, value []byte) (*Schema, error) {
 		return nil, errors.New(ErrorInvalidCommand)
 	}
 
-	// remove line feed and carnige return (13/10)/ CF/LF
+	// remove line feed and carriage return (13/10)/ CF/LF
 	key = bytes.Trim(key, crlf)
 	value = bytes.Trim(value, crlf)
 
@@ -77,7 +77,7 @@ func (c *commander) Get(command, key []byte) (*Schema, error) {
 		return nil, errors.New(ErrorInvalidCommand)
 	}
 
-	// remove line feed and carnige return (13/10)/ CF/LF
+	// remove line feed and carriage return (13/10)/ CF/LF
 	key = bytes.Trim(key, crlf)
 
 	lock.Lock()
@@ -96,7 +96,7 @@ func (c *commander) Delete(command, key []byte) (*Schema, error) {
 		return nil, errors.New(ErrorInvalidCommand)
 	}
 
-	// remove line feed and carnige return (13/10)/ CF/LF
+	// remove line feed and carriage return (13/10)/ CF/LF
 	key = bytes.Trim(key, crlf)
 
 	lock.Lock()
