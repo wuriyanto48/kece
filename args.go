@@ -10,6 +10,14 @@ import (
 const (
 	// Version ,  the version of Kece
 	Version = "0.0.0"
+
+	//Banner , show me :)
+	Banner = `
+ _  __ _____  ______  _____
+| |/ /| |__| |   ___|| |__| |
+| |\ \| |___ |  |    | |___
+|____________|_____________**%**
+	`
 )
 
 // Arguments struct will hold flag and arguments from stdin
@@ -35,13 +43,20 @@ func ParseArgs() (*Arguments, error) {
 	flag.BoolVar(&showVersion, "v", false, "show version")
 
 	flag.Usage = func() {
-
+		fmt.Fprintln(os.Stderr, Banner)
+		fmt.Fprintln(os.Stderr, "   **-----------------------------------------------**   ")
+		fmt.Fprintln(os.Stderr, "")
+		fmt.Fprintln(os.Stderr, "    Kece (an Experimental Distributed Key Value Store)   ")
+		fmt.Fprintln(os.Stderr, "")
 		fmt.Fprintln(os.Stderr, "	-net | --net", "network type eg: -net tcp")
 		fmt.Fprintln(os.Stderr, "	-port | --port", "port to listen eg: -port 9000")
 		fmt.Fprintln(os.Stderr, "	-v | --version", "show kece version")
 		fmt.Fprintln(os.Stderr, "	-h | --help", "show help and usage")
+		fmt.Fprintln(os.Stderr, "")
+		fmt.Fprintln(os.Stderr, "   **-----------------------------------------------**   ")
 		fmt.Fprintln(os.Stderr, "   Running: ")
 		fmt.Fprintln(os.Stderr, "   kece -port 8000 -net tcp")
+		fmt.Fprintln(os.Stderr, "")
 
 	}
 
