@@ -101,6 +101,7 @@ func (server *Server) Start() error {
 		return err
 	}
 
+	fmt.Printf("%s\n", Banner)
 	fmt.Println("log -> kece server listen on port :", server.args.Port)
 
 	defer listener.Close()
