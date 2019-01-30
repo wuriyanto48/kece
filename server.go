@@ -233,7 +233,7 @@ func processMessage(cm *ClientMessage, commander Commander, auth string) {
 				}
 			}
 
-			_, err := commander.Delete(cmd, key)
+			err := commander.Delete(cmd, key)
 			if err != nil {
 				reply := replies["ERROR"]
 				cm.Client.Conn.Write([]byte(reply))

@@ -6,71 +6,74 @@ import (
 )
 
 func TestCommander(t *testing.T) {
-	db := make(map[string]*Schema)
-	cmd := NewCommander(db)
+	dataStructures := []DataStructure{NewHashMap(), NewBST()}
 
-	t.Run("should success SET new value to db", func(t *testing.T) {
-		key := []byte("1")
-		value := []byte("wuriyanto")
-		command := []byte("SET")
+	for _, ds := range dataStructures {
+		cmd := NewCommander(ds)
 
-		expectedValue := []byte("wuriyanto")
+		t.Run("should success SET new value to db", func(t *testing.T) {
+			key := []byte("1")
+			value := []byte("wuriyanto")
+			command := []byte("SET")
 
-		newValue, err := cmd.Set(command, key, value)
+			expectedValue := []byte("wuriyanto")
 
-		if err != nil {
-			t.Error("command is not valid")
-		}
+			newValue, err := cmd.Set(command, key, value)
 
-		if !bytes.Equal(newValue.Value, expectedValue) {
-			t.Error("new value is not equal to value")
-		}
-	})
+			if err != nil {
+				t.Error("command is not valid")
+			}
 
-	t.Run("should success GET value from db", func(t *testing.T) {
-		key := []byte("1")
-		expectedValue := []byte("wuriyanto")
-		command := []byte("GET")
+			if !bytes.Equal(newValue.Value, expectedValue) {
+				t.Error("new value is not equal to value")
+			}
+		})
 
-		value, err := cmd.Get(command, key)
+		t.Run("should success GET value from db", func(t *testing.T) {
+			key := []byte("1")
+			expectedValue := []byte("wuriyanto")
+			command := []byte("GET")
 
-		if err != nil {
-			t.Error(err.Error())
-		}
+			value, err := cmd.Get(command, key)
 
-		if !bytes.Equal(value.Value, expectedValue) {
-			t.Error("value is not equal to expected value")
-		}
-	})
+			if err != nil {
+				t.Error(err.Error())
+			}
 
-	t.Run("should error SET new value to db with invalid command", func(t *testing.T) {
-		key := []byte("1")
-		value := []byte("wuriyanto")
-		command := []byte("ET")
+			if !bytes.Equal(value.Value, expectedValue) {
+				t.Error("value is not equal to expected value")
+			}
+		})
 
-		newValue, err := cmd.Set(command, key, value)
+		t.Run("should error SET new value to db with invalid command", func(t *testing.T) {
+			key := []byte("1")
+			value := []byte("wuriyanto")
+			command := []byte("ET")
 
-		if err == nil {
-			t.Error("command should invalid")
-		}
+			newValue, err := cmd.Set(command, key, value)
 
-		if newValue != nil {
-			t.Error("new value should be nil")
-		}
-	})
+			if err == nil {
+				t.Error("command should invalid")
+			}
 
-	t.Run("should error GET value from db with invalid command", func(t *testing.T) {
-		key := []byte("1")
-		command := []byte("ET")
+			if newValue != nil {
+				t.Error("new value should be nil")
+			}
+		})
 
-		value, err := cmd.Get(command, key)
+		t.Run("should error GET value from db with invalid command", func(t *testing.T) {
+			key := []byte("1")
+			command := []byte("ET")
 
-		if err == nil {
-			t.Error("command is not valid")
-		}
+			value, err := cmd.Get(command, key)
 
-		if value != nil {
-			t.Error("value should be nil")
-		}
-	})
+			if err == nil {
+				t.Error("command is not valid")
+			}
+
+			if value != nil {
+				t.Error("value should be nil")
+			}
+		})
+	}
 }
