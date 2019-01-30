@@ -6,7 +6,7 @@ import (
 )
 
 func TestCommander(t *testing.T) {
-	dataStructures := []DataStructure{NewHashMap(), NewBST()}
+	dataStructures := []DataStructure{newStructureMock()}
 
 	for _, ds := range dataStructures {
 		cmd := NewCommander(ds)
