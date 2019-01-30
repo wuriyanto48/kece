@@ -7,19 +7,6 @@ import (
 	"os"
 )
 
-const (
-	// Version ,  the version of Kece
-	Version = "0.0.0"
-
-	//Banner , show me :)
-	Banner = `
- _  __ _____  ______  _____
-| |/ /| |__| |   ___|| |__| |
-| |\ \| |___ |  |    | |___
-|____________|_____________**%**
-	`
-)
-
 // Arguments struct will hold flag and arguments from stdin
 type Arguments struct {
 	Auth            string
