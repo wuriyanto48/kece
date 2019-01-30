@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"sync"
-	"time"
 )
 
 var (
@@ -27,13 +26,6 @@ var (
 
 	lock = &sync.Mutex{}
 )
-
-// Schema database
-type Schema struct {
-	Key       []byte
-	Value     []byte
-	Timestamp time.Time
-}
 
 // Commander interface
 type Commander interface {
