@@ -6,6 +6,7 @@ import (
 	"runtime"
 
 	"github.com/Bhinneka/kece"
+	"github.com/Bhinneka/kece/storage"
 )
 
 func main() {
@@ -27,9 +28,9 @@ func main() {
 	var dataStorageType kece.DataStructure
 	switch args.DataStorageType {
 	case kece.HashMap:
-		dataStorageType = kece.NewHashMap()
+		dataStorageType = storage.NewHashMap()
 	case kece.BinarySearchTree:
-		dataStorageType = kece.NewBST()
+		dataStorageType = storage.NewBST()
 	default:
 		fmt.Printf("\033[31minvalid data storage type\033[0m\n")
 		os.Exit(1)
