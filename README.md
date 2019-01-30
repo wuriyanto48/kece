@@ -32,9 +32,9 @@ $ kece -port 8000
 log -> kece server listen on port : 8000
 ```
 
-- There are two type of data structure for store data, `HashMap` and `Binary Search Tree` (default using `HashMap`). For choose data structure type, add flag `-ds`.
+- There are two type of data structure for store data, `HashMap` and `Binary Tree` (default using `HashMap`). For choose data structure type, add flag `-ds`.
 ```shell
-$ kece -port 8000 -ds bst
+$ kece -port 8000 -ds bt
 $ kece -port 8000 -ds hashmap
 ```
 
