@@ -57,13 +57,13 @@ func ParseArgs() (*Arguments, error) {
 		fmt.Fprintln(os.Stderr, "	-net  | --net", "network type eg: -net tcp")
 		fmt.Fprintln(os.Stderr, "	-port | --port", "port to listen eg: -port 9000")
 		fmt.Fprintln(os.Stderr, "	-auth | --auth", "if you want to client send auth before exchange data")
-		fmt.Fprintln(os.Stderr, "	-ds   | --ds", "data storage type (hashmap or bst)")
+		fmt.Fprintln(os.Stderr, "	-ds   | --ds", " acronym from (data storage),you can choose either type (hashmap or bst)")
 		fmt.Fprintln(os.Stderr, "	-v    | --version", "show kece version")
 		fmt.Fprintln(os.Stderr, "	-h    | --help", "show help and usage")
 		fmt.Fprintln(os.Stderr, "")
 		fmt.Fprintln(os.Stderr, "   **-----------------------------------------------**   ")
 		fmt.Fprintln(os.Stderr, "   Running: ")
-		fmt.Fprintln(os.Stderr, "   kece -port 8000 -net tcp -ds bst")
+		fmt.Fprintln(os.Stderr, "   kece -port 8000 -net tcp -ds (bst/hashmap)")
 		fmt.Fprintln(os.Stderr, "")
 
 	}
