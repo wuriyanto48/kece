@@ -12,7 +12,7 @@ func TestNewBST(t *testing.T) {
 }
 
 func TestBST_Insert(t *testing.T) {
-	bst := NewBST()
+	bst := new(BST)
 	bst.Insert([]byte("d"), []byte("ini d"))
 	bst.Insert([]byte("b"), []byte("ini b"))
 	bst.Insert([]byte("c"), []byte("ini c"))
@@ -34,21 +34,24 @@ func TestBST_Insert(t *testing.T) {
 }
 
 func TestBST_Search(t *testing.T) {
-	bst := NewBST()
+	bst := new(BST)
 	bst.Insert([]byte("d"), []byte("ini d"))
 	bst.Insert([]byte("b"), []byte("ini b"))
 	bst.Insert([]byte("c"), []byte("ini c"))
 	bst.Insert([]byte("e"), []byte("ini e"))
 	bst.Insert([]byte("a"), []byte("ini a"))
 
-	res := bst.Search([]byte("e"))
+	res, err := bst.Search([]byte("e"))
+	if err != nil {
+		t.Errorf("should no error")
+	}
 	if string(res.Value) != "ini e" {
 		t.Errorf("should 'ini e'")
 	}
 }
 
 func TestBST_Delete(t *testing.T) {
-	bst := NewBST()
+	bst := new(BST)
 	bst.Insert([]byte("d"), []byte("ini d"))
 	bst.Insert([]byte("b"), []byte("ini b"))
 	bst.Insert([]byte("c"), []byte("ini c"))
