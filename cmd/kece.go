@@ -24,19 +24,18 @@ func main() {
 		os.Exit(0)
 	}
 
-	var commander kece.Commander
+	var dataStorageType kece.DataStructure
 	switch args.DataStorageType {
 	case kece.HashMap:
-		// create the global database
-		db := make(map[string]*kece.Schema)
-		// call commander constructor
-		commander = kece.NewCommander(db)
+		dataStorageType = kece.NewHashMap()
 	case kece.BinarySearchTree:
-		commander = kece.NewCommanderBST()
+		dataStorageType = kece.NewBST()
 	default:
 		fmt.Printf("\033[31minvalid data storage type\033[0m\n")
 		os.Exit(1)
 	}
+
+	commander := kece.NewCommander(dataStorageType)
 
 	// call kece constructor
 	server := kece.NewServer(args, commander)
