@@ -2,6 +2,8 @@
 
 An Experimental distributed Key Value Store written in Go
 
+[![Build Status](https://travis-ci.org/Bhinneka/kece.svg?branch=master)](https://travis-ci.org/Bhinneka/kece)
+
 ### TODO
 - Add Pub Sub feature
 - Protocol ? :D
