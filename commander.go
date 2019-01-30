@@ -40,22 +40,25 @@ type Commander interface {
 	Auth(command, key, value []byte) error
 	Set(command, key, value []byte) (*Schema, error)
 	Get(command, key []byte) (*Schema, error)
-	Delete(command, key []byte) (*Schema, error)
+	Delete(command, key []byte) error
 	Publish(topic string, command, value []byte) ([]byte, error)
 }
 
 // NewCommander function, Commander's constructor
-func NewCommander(db map[string]*Schema) Commander {
-	return &commander{db: db}
+func NewCommander(dataStorage DataStructure) Commander {
+	return &commander{ds: dataStorage}
 }
 
 type commander struct {
-	db map[string]*Schema
+	ds DataStructure
 }
 
 // Auth will set auth to kece server
 // TODO
 func (c *commander) Auth(command, key, value []byte) error {
+	lock.Lock()
+	defer lock.Unlock()
+
 	_, ok := commands[string(command)]
 	if !ok {
 		return errors.New(ErrorInvalidCommand)
@@ -65,15 +68,15 @@ func (c *commander) Auth(command, key, value []byte) error {
 	key = bytes.Trim(key, crlf)
 	value = bytes.Trim(value, crlf)
 
-	lock.Lock()
-	defer lock.Unlock()
-	newData := &Schema{Key: key, Value: value, Timestamp: time.Now()}
-	c.db[string(key)] = newData
+	c.ds.Insert(key, value)
 	return nil
 }
 
 // Set will set value to db
 func (c *commander) Set(command, key, value []byte) (*Schema, error) {
+	lock.Lock()
+	defer lock.Unlock()
+
 	_, ok := commands[string(command)]
 	if !ok {
 		return nil, errors.New(ErrorInvalidCommand)
@@ -83,16 +86,15 @@ func (c *commander) Set(command, key, value []byte) (*Schema, error) {
 	key = bytes.Trim(key, crlf)
 	value = bytes.Trim(value, crlf)
 
-	lock.Lock()
-	defer lock.Unlock()
-	newData := &Schema{Key: key, Value: value, Timestamp: time.Now()}
-	c.db[string(key)] = newData
-
+	newData := c.ds.Insert(key, value)
 	return newData, nil
 }
 
 // Get will get value from db
 func (c *commander) Get(command, key []byte) (*Schema, error) {
+	lock.Lock()
+	defer lock.Unlock()
+
 	_, ok := commands[string(command)]
 	if !ok {
 		return nil, errors.New(ErrorInvalidCommand)
@@ -100,34 +102,23 @@ func (c *commander) Get(command, key []byte) (*Schema, error) {
 
 	// remove line feed and carriage return (13/10)/ CF/LF
 	key = bytes.Trim(key, crlf)
-
-	lock.Lock()
-	defer lock.Unlock()
-	value, ok := c.db[string(key)]
-	if !ok {
-		return nil, errors.New(ErrorEmptyValue)
-	}
-	return value, nil
+	return c.ds.Search(key)
 }
 
 // Delete will get value from db
-func (c *commander) Delete(command, key []byte) (*Schema, error) {
+func (c *commander) Delete(command, key []byte) error {
+	lock.Lock()
+	defer lock.Unlock()
+
 	_, ok := commands[string(command)]
 	if !ok {
-		return nil, errors.New(ErrorInvalidCommand)
+		return errors.New(ErrorInvalidCommand)
 	}
 
 	// remove line feed and carriage return (13/10)/ CF/LF
 	key = bytes.Trim(key, crlf)
 
-	lock.Lock()
-	defer lock.Unlock()
-	value, ok := c.db[string(key)]
-	if !ok {
-		return nil, errors.New(ErrorEmptyValue)
-	}
-	delete(c.db, string(key))
-	return value, nil
+	return c.ds.Delete(key)
 }
 
 // Publish will publish message to specific topic
