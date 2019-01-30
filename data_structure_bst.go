@@ -5,6 +5,7 @@
 package kece
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
@@ -109,9 +110,9 @@ func (n *node) delete(key string, parent *node) {
 /*
 TODO:
 Want print tree:
-		10
-      /    \
-	 8	    14
+        10
+	  /    \
+     8      14
     /  \
    7    9
 */
@@ -135,43 +136,46 @@ type BST struct {
 }
 
 // NewBST init new BST
-func NewBST() *BST {
+func NewBST() DataStructure {
 	bst := new(BST)
 	return bst
 }
 
 // Insert node with new key and value
-func (tree *BST) Insert(key, value []byte) {
+func (tree *BST) Insert(key, value []byte) *Schema {
+	newSchema := &Schema{Key: key, Value: value, Timestamp: time.Now()}
 	newNode := new(node)
-	newNode.Key = key
-	newNode.Value = value
-	newNode.Timestamp = time.Now()
+	newNode.Key = newSchema.Key
+	newNode.Value = newSchema.Value
+	newNode.Timestamp = newSchema.Timestamp
 	if tree.root == nil {
 		tree.root = newNode
-		return
+		return newSchema
 	}
 	tree.root.insert(newNode)
+	return newSchema
 }
 
 // Search node based on key
-func (tree *BST) Search(key []byte) *Schema {
-	root := tree.root.searchNode(string(key))
-	if root != nil {
-		return &Schema{Key: root.Key, Value: root.Value, Timestamp: root.Timestamp}
+func (tree *BST) Search(key []byte) (*Schema, error) {
+	resNode := tree.root.searchNode(string(key))
+	if resNode != nil {
+		return &Schema{Key: resNode.Key, Value: resNode.Value, Timestamp: resNode.Timestamp}, nil
 	}
-	return nil
+	return nil, errors.New(ErrorEmptyValue)
 }
 
 // Delete node based on key
-func (tree *BST) Delete(key []byte) {
+func (tree *BST) Delete(key []byte) error {
 	if tree.root == nil {
-		return
+		return errors.New(ErrorEmptyValue)
 	}
 	tmpParent := &node{right: tree.root}
 	tree.root.delete(string(key), tmpParent)
 	if tmpParent.right == nil {
 		tree.root = nil
 	}
+	return nil
 }
 
 // Print want show in pretty tree
