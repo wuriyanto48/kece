@@ -4,5 +4,5 @@ const (
 	// HashMap constanta
 	HashMap = "hashmap"
 	// BinarySearchTree constanta
-	BinarySearchTree = "bst"
+	BinarySearchTree = "bt"
 )

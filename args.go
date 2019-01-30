@@ -43,7 +43,7 @@ func ParseArgs() (*Arguments, error) {
 	flag.StringVar(&auth, "auth", "", "set server auth eg: -net tcp")
 	flag.StringVar(&network, "net", "tcp", "network type eg: -net tcp")
 	flag.StringVar(&port, "port", "9000", "port to listen eg: -port 9000")
-	flag.StringVar(&dataStorageType, "ds", HashMap, "data storage type (hashmap or BST)")
+	flag.StringVar(&dataStorageType, "ds", HashMap, "data storage type (hashmap or binary tree)")
 
 	flag.BoolVar(&showVersion, "version", false, "show version")
 	flag.BoolVar(&showVersion, "v", false, "show version")
@@ -57,13 +57,14 @@ func ParseArgs() (*Arguments, error) {
 		fmt.Fprintln(os.Stderr, "	-net  | --net", "network type eg: -net tcp")
 		fmt.Fprintln(os.Stderr, "	-port | --port", "port to listen eg: -port 9000")
 		fmt.Fprintln(os.Stderr, "	-auth | --auth", "if you want to client send auth before exchange data")
-		fmt.Fprintln(os.Stderr, "	-ds   | --ds", " acronym from (data storage),you can choose either type (hashmap or bst)")
+		fmt.Fprintln(os.Stderr, "	-ds   | --ds", " acronym from (data storage), ")
+		fmt.Fprintln(os.Stderr, "	                you can choose either type (hashmap or binary tree)")
 		fmt.Fprintln(os.Stderr, "	-v    | --version", "show kece version")
 		fmt.Fprintln(os.Stderr, "	-h    | --help", "show help and usage")
 		fmt.Fprintln(os.Stderr, "")
 		fmt.Fprintln(os.Stderr, "   **-----------------------------------------------**   ")
 		fmt.Fprintln(os.Stderr, "   Running: ")
-		fmt.Fprintln(os.Stderr, "   kece -port 8000 -net tcp -ds (bst/hashmap)")
+		fmt.Fprintln(os.Stderr, "   kece -port 8000 -net tcp -ds (bt/hashmap)")
 		fmt.Fprintln(os.Stderr, "")
 
 	}
