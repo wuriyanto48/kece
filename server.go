@@ -155,14 +155,12 @@ func processMessage(cm *ClientMessage, commander Commander, auth string) {
 			return
 		}
 
-		messages := bytes.Split(cm.Message, []byte(" "))
-
-		cmd := messages[0]
-		key := messages[1]
+		cmd := cm.Cmd
+		key := cm.Key
 
 		switch string(cmd) {
 		case commands["AUTH"]:
-			value := messages[1]
+			value := cm.Key
 			value = bytes.Trim(value, crlf)
 			if len(auth) <= 0 {
 				reply := replies["ERROR"]
@@ -195,7 +193,7 @@ func processMessage(cm *ClientMessage, commander Commander, auth string) {
 				}
 			}
 
-			value := messages[2]
+			value := cm.Value
 			_, err := commander.Set(cmd, key, value)
 			if err != nil {
 				reply := replies["ERROR"]
