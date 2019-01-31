@@ -114,8 +114,8 @@ func (n *node) delete(key string, parent *node) {
 /*
 TODO:
 Want print tree:
-        10
-	  /    \
+		10
+      /    \
      8      14
     /  \
    7    9

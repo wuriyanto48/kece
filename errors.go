@@ -9,4 +9,6 @@ const (
 	ErrorEmptyValue = "-NOT FOUND\x0D\x0A"
 	// ErrorInvalidOperation error
 	ErrorInvalidOperation = "-INVALID OPERATION\x0D\x0A"
+	// ErrorInvalidArgument error
+	ErrorInvalidArgument = "-INVALID ARGUMENT(S)\x0D\x0A"
 )
