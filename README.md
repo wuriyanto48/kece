@@ -10,7 +10,7 @@ An Experimental distributed Key Value Store written in Go
 - Support multiple datatype to store (now `Kece` only support simple string)
 
 ### Usage
-- Build binary from source
+- <b>Build binary from source</b>
 ```shell
 $ go get github.com/Bhinneka/kece
 
@@ -19,7 +19,7 @@ $ go install github.com/Bhinneka/kece/cmd
 $ kece --version
 ```
 
-- Run `kece` server
+- <b>Run `kece` server</b>
 
     if `port flag` is not present, `kece` will using `9000` as the default port
 ```shell
@@ -38,7 +38,7 @@ $ kece -port 8000 -ds bt
 $ kece -port 8000 -ds hashmap
 ```
 
-- Store simple data
+- <b>Store simple data</b>
     
     you can use either `nc` or `telnet` as the client
 ```shell
@@ -60,7 +60,7 @@ $ DEL 1
 $ +OK
 ```
 
-- Auth mechanism
+- <b>Auth mechanism</b>
 
     if you want to use `Auth` on your `kece server`, simply add `-auth your-server-password` when start your server
 ```shell
@@ -87,4 +87,4 @@ $
 Wuriyanto https://github.com/wuriyanto48
 
 ### Contributor
-Agung Dwi Prasetyo https://github.com/agungdwiprasetyo
+- Agung Dwi Prasetyo https://github.com/agungdwiprasetyo
