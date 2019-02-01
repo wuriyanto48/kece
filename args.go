@@ -4,7 +4,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"os"
 )
 
 // Arguments struct will hold flag and arguments from stdin
@@ -37,11 +36,11 @@ func ParseArgs() (*Arguments, error) {
 
 	flag.Usage = func() {
 		printGreenColor(Banner)
-		fmt.Fprintln(os.Stderr)
+		fmt.Println()
 		printGreenColor("   **-----------------------------------------------**   ")
 		fmt.Println()
 		printGreenColor("    Kece (an Experimental Distributed Key Value Store)   ")
-		fmt.Fprintln(os.Stderr, "")
+		fmt.Println()
 		printGreenColor("	-net  | --net network type eg: -net tcp")
 		printGreenColor("	-port | --port port to listen eg: -port 9000")
 		printGreenColor("	-auth | --auth if you want to client send auth before exchange data")
