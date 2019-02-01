@@ -2,3 +2,5 @@
 .idea
 cmd/kece
 kece
+bin
+vendor
