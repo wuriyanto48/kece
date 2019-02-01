@@ -4,3 +4,4 @@ cmd/kece
 kece
 bin
 vendor
+coverage.txt
