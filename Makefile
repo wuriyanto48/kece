@@ -10,7 +10,6 @@ unittest:
 # Linter
 lint-prepare: 
 	@echo "Installing golangci-lint"
-	# @go get -u github.com/golangci/golangci-lint/cmd/golangci-lint 
 	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s v1.13.2
 
 lint: 
