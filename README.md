@@ -80,6 +80,10 @@ $ +OK
 $
 ```
 
+- <b>Access KECE from code</b>
+
+    follow this repository https://github.com/Bhinneka/kece-client-examples to see example how to access `kece` from specific language
+
 
 #
 
