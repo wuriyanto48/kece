@@ -46,7 +46,6 @@ type commander struct {
 }
 
 // Auth will set auth to kece server
-// TODO
 func (c *commander) Auth(command, key, value []byte) error {
 	lock.Lock()
 	defer lock.Unlock()
@@ -56,7 +55,7 @@ func (c *commander) Auth(command, key, value []byte) error {
 		return errors.New(ErrorInvalidCommand)
 	}
 
-	// remove line feed and carriage return (13/10)/ CF/LF
+	// remove line feed and carriage return (13/10)/ CR/LF
 	key = bytes.Trim(key, crlf)
 	value = bytes.Trim(value, crlf)
 
@@ -74,7 +73,7 @@ func (c *commander) Set(command, key, value []byte) (*Schema, error) {
 		return nil, errors.New(ErrorInvalidCommand)
 	}
 
-	// remove line feed and carriage return (13/10)/ CF/LF
+	// remove line feed and carriage return (13/10)/ CR/LF
 	key = bytes.Trim(key, crlf)
 	value = bytes.Trim(value, crlf)
 
@@ -92,7 +91,7 @@ func (c *commander) Get(command, key []byte) (*Schema, error) {
 		return nil, errors.New(ErrorInvalidCommand)
 	}
 
-	// remove line feed and carriage return (13/10)/ CF/LF
+	// remove line feed and carriage return (13/10)/ CR/LF
 	key = bytes.Trim(key, crlf)
 	return c.ds.Search(key)
 }
@@ -107,7 +106,7 @@ func (c *commander) Delete(command, key []byte) error {
 		return errors.New(ErrorInvalidCommand)
 	}
 
-	// remove line feed and carriage return (13/10)/ CF/LF
+	// remove line feed and carriage return (13/10)/ CR/LF
 	key = bytes.Trim(key, crlf)
 
 	return c.ds.Delete(key)
