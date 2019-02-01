@@ -43,7 +43,7 @@ func NewServer(args *Arguments, commander Commander) *Server {
 //addClient function will push new client to the map clients
 func (server *Server) addClient(key *Client, b bool) {
 	server.Lock()
-	fmt.Printf("log -> new client connected %s\n", key.ID)
+	printYellowColor(fmt.Sprintf("log -> new client connected %s\n", key.ID))
 	server.clients[key] = b
 	server.Unlock()
 }
@@ -82,11 +82,11 @@ func (server *Server) serveClient() {
 			}()
 		case client := <-server.unregister:
 			if _, ok := server.clients[client]; ok {
-				fmt.Printf("client %s unregister its connection\n", client.ID)
+				printRedColor(fmt.Sprintf("client %s unregister its connection\n", client.ID))
 				server.deleteClient(client)
 			}
 		case clientMessage := <-server.clientMessage:
-			fmt.Printf("Received message : %s from %s\n", string(clientMessage.Message), clientMessage.Client.ID)
+			printCyanColor(fmt.Sprintf("Received message : %s from %s\n", string(clientMessage.Message), clientMessage.Client.ID))
 
 			go processMessage(clientMessage, server.commander, server.args.Auth)
 		}
@@ -101,8 +101,8 @@ func (server *Server) Start() error {
 		return err
 	}
 
-	fmt.Printf("%s\n", Banner)
-	fmt.Printf("log -> kece server listen on port : %s\n", server.args.Port)
+	printGreenColor(Banner)
+	printYellowColor(fmt.Sprintf("log -> kece server listen on port : %s\n", server.args.Port))
 
 	defer listener.Close()
 
