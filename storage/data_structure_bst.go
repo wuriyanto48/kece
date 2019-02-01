@@ -55,7 +55,6 @@ func (n *node) searchNode(key string) *node {
 	return nil
 }
 
-// get lowest key in tree node (far left in nodes)
 /* TODO (bxcodec)
 * This block of code commented because is not used yet.
 * Uncomment later if we want to use it.
@@ -63,6 +62,7 @@ func (n *node) searchNode(key string) *node {
  */
 
 /*
+// get lowest key in tree node (far left in nodes)
 func (n *node) findLowestNode() *node {
 	if n.left == nil {
 		return n
@@ -120,7 +120,7 @@ func (n *node) delete(key string, parent *node) {
 }
 
 /*
-TODO:
+TODO: (agungdwiprasetyo)
 Want print tree:
 		10
       /    \
