@@ -21,9 +21,6 @@ var (
 	}
 
 	crlf = "\x0D\x0A"
-	cr   = "\x0D"
-	lf   = "\x0A"
-
 	lock = &sync.Mutex{}
 )
 

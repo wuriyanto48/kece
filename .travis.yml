@@ -5,4 +5,6 @@ go:
  - master
 
 script:
+ - make lint-prepare
+ - make lint
  - make test

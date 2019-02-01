@@ -56,12 +56,20 @@ func (n *node) searchNode(key string) *node {
 }
 
 // get lowest key in tree node (far left in nodes)
+/* TODO (bxcodec)
+* This block of code commented because is not used yet.
+* Uncomment later if we want to use it.
+* Commented reasons: Not Passed linter
+ */
+
+/*
 func (n *node) findLowestNode() *node {
 	if n.left == nil {
 		return n
 	}
 	return n.left.findLowestNode()
 }
+*/
 
 // get biggest key in tree node (far right in nodes)
 func (n *node) findBiggestNode() *node {

@@ -59,13 +59,19 @@ func TestBST_Delete(t *testing.T) {
 	bst.Insert([]byte("e"), []byte("ini e"))
 	bst.Insert([]byte("a"), []byte("ini a"))
 
-	bst.Delete([]byte("e"))
+	err := bst.Delete([]byte("e"))
+	if err != nil {
+		t.Errorf("Expected %v, got %v", nil, err)
+	}
 	rightRoot := bst.root.right
 	if rightRoot != nil {
 		t.Errorf("should nil")
 	}
 
-	bst.Delete([]byte("b"))
+	err = bst.Delete([]byte("b"))
+	if err != nil {
+		t.Errorf("Expected %v, got %v", nil, err)
+	}
 	leftRoot := bst.root.left
 	if string(leftRoot.Key) != "a" {
 		t.Errorf("expected a, result is %s", string(leftRoot.Key))
