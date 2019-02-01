@@ -36,23 +36,24 @@ func ParseArgs() (*Arguments, error) {
 	flag.BoolVar(&showVersion, "v", false, "show version")
 
 	flag.Usage = func() {
-		fmt.Fprintln(os.Stderr, Banner)
-		fmt.Fprintln(os.Stderr, "   **-----------------------------------------------**   ")
+		printGreenColor(Banner)
+		fmt.Fprintln(os.Stderr)
+		printGreenColor("   **-----------------------------------------------**   ")
+		fmt.Println()
+		printGreenColor("    Kece (an Experimental Distributed Key Value Store)   ")
 		fmt.Fprintln(os.Stderr, "")
-		fmt.Fprintln(os.Stderr, "    Kece (an Experimental Distributed Key Value Store)   ")
-		fmt.Fprintln(os.Stderr, "")
-		fmt.Fprintln(os.Stderr, "	-net  | --net", "network type eg: -net tcp")
-		fmt.Fprintln(os.Stderr, "	-port | --port", "port to listen eg: -port 9000")
-		fmt.Fprintln(os.Stderr, "	-auth | --auth", "if you want to client send auth before exchange data")
-		fmt.Fprintln(os.Stderr, "	-ds   | --ds", " acronym from (data storage), ")
-		fmt.Fprintln(os.Stderr, "	                you can choose either type (hashmap or binary tree)")
-		fmt.Fprintln(os.Stderr, "	-v    | --version", "show kece version")
-		fmt.Fprintln(os.Stderr, "	-h    | --help", "show help and usage")
-		fmt.Fprintln(os.Stderr, "")
-		fmt.Fprintln(os.Stderr, "   **-----------------------------------------------**   ")
-		fmt.Fprintln(os.Stderr, "   Running: ")
-		fmt.Fprintln(os.Stderr, "   kece -port 8000 -net tcp -ds (bt/hashmap)")
-		fmt.Fprintln(os.Stderr, "")
+		printGreenColor("	-net  | --net network type eg: -net tcp")
+		printGreenColor("	-port | --port port to listen eg: -port 9000")
+		printGreenColor("	-auth | --auth if you want to client send auth before exchange data")
+		printGreenColor("	-ds   | --ds  acronym from (data storage), ")
+		printGreenColor("	                you can choose either type (hashmap or binary tree)")
+		printGreenColor("	-v    | --version show kece version")
+		printGreenColor("	-h    | --help show help and usage")
+		fmt.Println()
+		printGreenColor("   **-----------------------------------------------**   ")
+		printGreenColor("   Running: ")
+		printGreenColor("   kece -port 8000 -net tcp -ds (bt/hashmap)")
+		fmt.Println()
 
 	}
 
@@ -74,4 +75,20 @@ func ParseArgs() (*Arguments, error) {
 		ShowVersion:     showVersion,
 		Help:            flag.Usage,
 	}, nil
+}
+
+func printRedColor(s string) {
+	fmt.Printf("\033[31m%s\033[0m%s", s, "\n")
+}
+
+func printGreenColor(s string) {
+	fmt.Printf("\033[32m%s\033[0m%s", s, "\n")
+}
+
+func printYellowColor(s string) {
+	fmt.Printf("\033[33m%s\033[0m%s", s, "\n")
+}
+
+func printCyanColor(s string) {
+	fmt.Printf("\033[36m%s\033[0m%s", s, "\n")
 }
