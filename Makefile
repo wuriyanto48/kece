@@ -1,13 +1,11 @@
 TEST_OPTS=-covermode=atomic -v -cover -race -coverprofile=coverage.txt
 
 # Testing
-.PHONY: unittest
-unittest:
-	@go test -short $(TEST_OPTS) ./...
-
-.PHONY: test
 test:
 	@go test $(TEST_OPTS) ./...
+
+unittest:
+	@go test -short $(TEST_OPTS) ./...
 
 # Linter
 lint-prepare: 
@@ -23,7 +21,5 @@ lint:
 		--enable=goconst \
 		--enable=unconvert \
 		./...
-clean:
-	if [ -f ${BINARY} ] ; then rm ${BINARY} ; fi
 
-.PHONY: lint lint-prepare clean build unittest 
+.PHONY: lint lint-prepare clean build unittest test
