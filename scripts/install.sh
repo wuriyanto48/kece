@@ -28,4 +28,4 @@ install_kece()
 install_kece "$@"
 
 # TODO
-# curl https://raw.githubusercontent.com/Bhinneka/kece/master/scripts/install.sh | bash {your os name}
+# curl https://raw.githubusercontent.com/Bhinneka/kece/master/scripts/install.sh | bash -s {your os name}
