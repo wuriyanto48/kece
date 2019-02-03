@@ -1,8 +1,14 @@
 ## KECE
+<div align="center">
+    
+[<img src="./assets/kece.png" width="250">](https://github.com/Bhinneka/kece)
+<br/><br/>
+[![Build Status](https://travis-ci.org/Bhinneka/kece.svg?branch=master)](https://travis-ci.org/Bhinneka/kece)
+</div>
 
+### What is kece?
 An Experimental distributed Key Value Store written in Go
 
-[![Build Status](https://travis-ci.org/Bhinneka/kece.svg?branch=master)](https://travis-ci.org/Bhinneka/kece)
 
 ### TODO
 - Add Pub Sub feature
