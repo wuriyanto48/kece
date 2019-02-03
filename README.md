@@ -1,4 +1,3 @@
-## KECE
 <div align="center">
     
 [<img src="./assets/kece.png" width="250">](https://github.com/Bhinneka/kece)
