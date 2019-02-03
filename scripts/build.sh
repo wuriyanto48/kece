@@ -2,6 +2,8 @@
 
 APP=$1
 VERSION=$2
+
+#targets OS, you can add more to this OS collections
 PLATFORMS=("windows/amd64" "windows/386" "darwin/amd64" "linux/amd64")
 
 if [[ -z "$APP" || -z "$VERSION" ]]; then
