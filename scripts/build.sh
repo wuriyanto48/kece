@@ -29,7 +29,7 @@ do
     fi
 
     env GOOS=$GOOS GOARCH=$GOARCH go build -o $OUTPUT_BINARY $APP
-    #when something goes wrong with go build, just exit imidiately
+    #when something goes wrong with go build, just exit immediately
     if [ $? -ne 0 ]; then
         echo 'go build fail...'
         exit 1
@@ -38,7 +38,7 @@ do
     #OUTPUT_TAR_NAME=$APP_NAME'-v0.0.0.'$GOOS'-'$GOARCH'.tar.gz'
     OUTPUT_TAR_NAME=$APP_NAME'-'$VERSION'.'$GOOS'-'$GOARCH'.tar.gz'
     env tar czf $OUTPUT_TAR_NAME $OUTPUT_BINARY
-    #when something goes wrong with tar, just exit imidiately
+    #when something goes wrong with tar, just exit immediately
     if [ $? -ne 0 ]; then
         echo 'tar process fail...'
         exit 1
