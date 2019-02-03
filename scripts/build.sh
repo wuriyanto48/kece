@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# source https://github.com/wuriyanto48/build-tools
+
 APP=$1
 VERSION=$2
 

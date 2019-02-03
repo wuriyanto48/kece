@@ -5,3 +5,4 @@ kece
 bin
 vendor
 coverage.txt
+*.gz
