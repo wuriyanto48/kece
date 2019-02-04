@@ -1,5 +1,8 @@
 TEST_OPTS=-covermode=atomic -v -cover -race -coverprofile=coverage.txt
 
+APP_NAME=github.com/Bhinneka/kece
+APP_RELEASE_VERSION=v0.0.0
+
 # Testing
 test:
 	@go test $(TEST_OPTS) ./...
@@ -21,4 +24,7 @@ lint:
 		--enable=unconvert \
 		./...
 
-.PHONY: lint lint-prepare clean build unittest test
+release:
+	./scripts/build.sh $(APP_NAME) $(APP_RELEASE_VERSION)
+
+.PHONY: lint lint-prepare clean build unittest test release
