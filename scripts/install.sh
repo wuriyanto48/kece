@@ -19,13 +19,19 @@ install_kece()
             # wget https://github.com/Bhinneka/kece/releases/download/v0.0.0/kece-v0.0.0.linux-amd64.tar.gz
             # tar -zxvf kece-v0.0.0.linux-amd64.tar.gz
             ;;
+        msys)
+            echo "os windows"
+            #TODO
+            ;;
         *)
             echo "operating system unknown"
             ;;
     esac
 }
 
-install_kece "$@"
+os_type=${OSTYPE//[0-9.-]*/}
+
+install_kece $os_type
 
 # TODO
-# curl https://raw.githubusercontent.com/Bhinneka/kece/master/scripts/install.sh | bash -s {your os name}
+# curl https://raw.githubusercontent.com/Bhinneka/kece/master/scripts/install.sh | bash
