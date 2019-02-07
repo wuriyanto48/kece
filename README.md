@@ -95,8 +95,6 @@ $
 ### Author
 Wuriyanto https://github.com/wuriyanto48
 
-### Contributor
-- Agung Dwi Prasetyo https://github.com/agungdwiprasetyo
 
 ### Contibutions PR
 Before creating PR make sure your PR is passed. 
