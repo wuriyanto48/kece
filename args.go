@@ -26,7 +26,7 @@ func ParseArgs() (*Arguments, error) {
 		showVersion     bool
 	)
 
-	flag.StringVar(&auth, "auth", "", "set server auth eg: -net tcp")
+	flag.StringVar(&auth, "auth", "", "set server auth eg: -auth my-secret")
 	flag.StringVar(&network, "net", "tcp", "network type eg: -net tcp")
 	flag.StringVar(&port, "port", "9000", "port to listen eg: -port 9000")
 	flag.StringVar(&dataStorageType, "ds", HashMap, "data storage type (hashmap or binary tree)")
