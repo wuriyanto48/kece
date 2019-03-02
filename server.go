@@ -138,9 +138,6 @@ func (server *Server) Start() error {
 }
 
 func validateAuth(cm *ClientMessage, commander Commander, auth string) error {
-	if err := cm.ValidateMessage(); err != nil {
-		return err
-	}
 
 	clientID := cm.Client.ID
 
