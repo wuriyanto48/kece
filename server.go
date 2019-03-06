@@ -167,7 +167,11 @@ func processExpired(ctx context.Context, cm *ClientMessage, commander Commander)
 
 	select {
 	case <-c.Done():
-		commander.Delete([]byte("DEL"), cm.Key)
+		err := commander.Delete([]byte("DEL"), cm.Key)
+		if err != nil {
+			log.Printf("Failed to delete value. Err: %v", err)
+		}
+	default:
 	}
 }
 
