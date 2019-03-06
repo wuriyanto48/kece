@@ -106,43 +106,56 @@ func TestClient(t *testing.T) {
 
 func TestIsValidValue(t *testing.T) {
 	tests := []struct {
-		name       string
-		args       string
-		wantValid  bool
-		wantResult string
+		name        string
+		args        string
+		wantValue   string
+		wantExpired int
+		wantError   bool
 	}{
 		{
-			name:       "Testcase #1: Positive (store json string)",
-			args:       `{"field": "this is value from field a"}`,
-			wantValid:  true,
-			wantResult: `{"field": "this is value from field a"}`,
+			name:      "Testcase #1: Positive (store json string)",
+			args:      `{"field": "this is value from field a"}`,
+			wantError: false,
+			wantValue: `{"field": "this is value from field a"}`,
 		},
 		{
-			name:       "Testcase #2: Positive (store a string with spaces)",
-			args:       `"this is value"`,
-			wantValid:  true,
-			wantResult: `this is value`,
+			name:      "Testcase #2: Positive (store a string with spaces)",
+			args:      `"this is value"`,
+			wantError: false,
+			wantValue: `this is value`,
 		},
 		{
-			name:       "Testcase #3: Positive (store a string with spaces)",
-			args:       `'this is value'`,
-			wantValid:  true,
-			wantResult: `this is value`,
+			name:      "Testcase #3: Positive (store a string with spaces)",
+			args:      `'this is value'`,
+			wantError: false,
+			wantValue: `this is value`,
 		},
 		{
-			name:      "Testcase #4: Negative (invalid sign)",
+			name:        "Testcase #4: Positive (store a string with expired value)",
+			args:        `'this is value with lifetime 20 seconds' 20`,
+			wantError:   false,
+			wantValue:   `this is value with lifetime 20 seconds`,
+			wantExpired: 20,
+		},
+		{
+			name:      "Testcase #5: Negative (invalid sign)",
 			args:      `"this is value'`,
-			wantValid: false,
+			wantError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			isValid, res := isValidValue(tt.args)
-			if isValid != tt.wantValid {
-				t.Errorf("isValidValue() = %v, want %v", isValid, tt.wantValid)
+			value, expired, err := processingValue(tt.args)
+			if (err != nil) != tt.wantError {
+				t.Errorf("error: processingValue() = %v, want %v", err, tt.wantError)
 			}
-			if isValid && res != tt.wantResult {
-				t.Errorf("isValidValue() = %v, want %v", res, tt.wantResult)
+
+			if err == nil && value != tt.wantValue {
+				t.Errorf("value: processingValue() = %v, want %v", value, tt.wantValue)
+			}
+
+			if err == nil && expired != tt.wantExpired {
+				t.Errorf("expired: processingValue() = %v, want %v", expired, tt.wantExpired)
 			}
 		})
 	}

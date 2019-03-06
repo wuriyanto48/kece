@@ -3,6 +3,7 @@ package kece
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -159,6 +160,17 @@ func writeMessage(cm *ClientMessage, message []byte) {
 		log.Printf("Failed to write response. Err: %v", err)
 	}
 }
+
+func processExpired(ctx context.Context, cm *ClientMessage, commander Commander) {
+	c, cancel := context.WithTimeout(ctx, cm.Exp)
+	defer cancel()
+
+	select {
+	case <-c.Done():
+		commander.Delete([]byte("DEL"), cm.Key)
+	}
+}
+
 func processMessage(cm *ClientMessage, commander Commander, auth string) {
 	for {
 		if err := cm.ValidateMessage(); err != nil {
@@ -210,6 +222,10 @@ func processMessage(cm *ClientMessage, commander Commander, auth string) {
 				reply := replies["ERROR"]
 				writeMessage(cm, []byte(reply))
 				return
+			}
+
+			if cm.Exp != 0 {
+				go processExpired(context.Background(), cm, commander)
 			}
 
 			reply := replies["OK"]
