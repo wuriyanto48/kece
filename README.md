@@ -63,6 +63,9 @@ $ bhinneka
 $
 $ DEL 1
 $ +OK
+$
+$ SET cache "this is cache value with lifetime 20 seconds" 20
+$ +OK
 ```
 
 - <b>Auth mechanism</b>
