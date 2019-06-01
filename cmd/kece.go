@@ -5,8 +5,8 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/Bhinneka/kece"
-	"github.com/Bhinneka/kece/storage"
+	"github.com/wuriyanto48/kece"
+	"github.com/wuriyanto48/kece/storage"
 )
 
 func main() {
