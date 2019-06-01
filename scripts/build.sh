@@ -20,7 +20,7 @@ build_release()
 
     if [[ -z "$APP" || -z "$VERSION" ]]; then
         echo "$0 require package name and version arguments"
-        echo "example : ./build.sh github.com/Bhinneka/kece/cmd v1.0.0"
+        echo "example : ./build.sh github.com/wuriyanto48/kece/cmd v1.0.0"
         exit 1
     fi
 
@@ -54,4 +54,3 @@ build_release()
 }
 
 build_release "$@"
-
