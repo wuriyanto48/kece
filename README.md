@@ -1,8 +1,8 @@
 <div align="center">
 
-[<img src="./assets/logo-kece-readme.png" width="300">](https://github.com/Bhinneka/kece)
+[<img src="./assets/logo-kece-readme.png" width="300">](https://github.com/wuriyanto48/kece)
 <br/><br/>
-[![Build Status](https://travis-ci.org/Bhinneka/kece.svg?branch=master)](https://travis-ci.org/Bhinneka/kece)
+[![Build Status](https://travis-ci.org/wuriyanto48/kece.svg?branch=master)](https://travis-ci.org/wuriyanto48/kece)
 </div>
 
 ### What is kece?
@@ -17,9 +17,9 @@ An Experimental distributed Key Value Store written in Go
 ### Usage
 - <b>Build binary from source</b>
 ```shell
-$ go get github.com/Bhinneka/kece
+$ go get github.com/wuriyanto48/kece
 
-$ go install github.com/Bhinneka/kece/cmd
+$ go install github.com/wuriyanto48/kece/cmd
 
 $ kece --version
 ```
@@ -44,7 +44,7 @@ $ kece -port 8000 -ds hashmap
 ```
 
 - <b>Store simple data</b>
-    
+
     you can use either `nc` or `telnet` as the client
 ```shell
 $ nc localhost 8000
@@ -52,14 +52,14 @@ $
 $ SET 1 wuriyanto
 $ +OK
 $
-$ SET *BJE* bhinneka
+$ SET *BJE* hello
 $ +OK
 $
 $ GET 1
 $ wurianto
 $
 $ GET *BJE*
-$ bhinneka
+$ hello
 $
 $ DEL 1
 $ +OK
@@ -100,7 +100,7 @@ Wuriyanto https://github.com/wuriyanto48
 
 
 ### Contibutions PR
-Before creating PR make sure your PR is passed. 
+Before creating PR make sure your PR is passed.
 Use the linter first, then commit and push
 
 ```
