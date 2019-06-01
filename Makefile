@@ -1,6 +1,6 @@
 TEST_OPTS=-covermode=atomic -v -cover -race -coverprofile=coverage.txt
 
-APP_NAME=github.com/Bhinneka/kece
+APP_NAME=github.com/wuriyanto48/kece
 APP_RELEASE_VERSION=v0.0.0
 
 # Testing
@@ -11,11 +11,11 @@ unittest:
 	@go test -short $(TEST_OPTS) ./...
 
 # Linter
-lint-prepare: 
+lint-prepare:
 	@echo "Installing golangci-lint"
 	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s v1.13.2
 
-lint: 
+lint:
 	./bin/golangci-lint run \
 		--exclude-use-default=false \
 		--enable=golint \
