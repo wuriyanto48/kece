@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Bhinneka/kece"
+	"github.com/wuriyanto48/kece"
 )
 
 type node struct {
