@@ -3,6 +3,9 @@ TEST_OPTS=-covermode=atomic -v -cover -race -coverprofile=coverage.txt
 APP_NAME=github.com/wuriyanto48/kece
 APP_RELEASE_VERSION=v0.0.0
 
+build:
+	go build github.com/wuriyanto48/kece/cmd/kece
+
 # Testing
 test:
 	@go test $(TEST_OPTS) ./...
