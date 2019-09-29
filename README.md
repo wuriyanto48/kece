@@ -77,10 +77,13 @@ $ +OK
     if you want to use `Auth` on your `kece server`, simply add `-auth your-server-password` when start your server
 ```shell
 $ kece -port 8000 -auth my-secret
- _  __ _____  ______  _____
-| |/ /| |__| |   ___|| |__| |
-| |\ \| |___ |  |    | |___
-|____________|_____________**%**
+		)
+	( /(    (         (
+	)\())  ))\  (    ))\
+	((_)\  /((_) )\  /((_)
+	| |(_)(_))  ((_)(_))
+	| / / / -_)/ _| / -_)
+	|_\_\ \___|\__| \___|
 
 log -> kece server listen on port : 8000
 ```
