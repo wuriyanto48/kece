@@ -17,9 +17,9 @@ An Experimental distributed Key Value Store written in Go
 ### Usage
 - <b>Build binary from source</b>
 ```shell
-$ go get github.com/wuriyanto48/kece
+$ git clone https://github.com/wuriyanto48/kece.git
 
-$ go install github.com/wuriyanto48/kece/cmd
+$ make build
 
 $ kece --version
 ```
@@ -29,10 +29,14 @@ $ kece --version
     if `port flag` is not present, `kece` will using `9000` as the default port
 ```shell
 $ kece -port 8000
- _  __ _____  ______  _____
-| |/ /| |__| |   ___|| |__| |
-| |\ \| |___ |  |    | |___
-|____________|_____________**%**
+		)
+	( /(    (         (
+	)\())  ))\  (    ))\
+	((_)\  /((_) )\  /((_)
+	| |(_)(_))  ((_)(_))
+	| / / / -_)/ _| / -_)
+	|_\_\ \___|\__| \___|
+
 
 log -> kece server listen on port : 8000
 ```
@@ -45,7 +49,7 @@ $ kece -port 8000 -ds hashmap
 
 - <b>Store simple data</b>
 
-    you can use either `nc` or `telnet` as the client
+    you can use either `nc` or `telnet` as client
 ```shell
 $ nc localhost 8000
 $
