@@ -8,7 +8,10 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
+	"os/signal"
 	"sync"
+	"syscall"
 )
 
 // Server struct
@@ -20,6 +23,7 @@ type Server struct {
 	publish       chan []byte
 	clientMessage chan *ClientMessage
 	commander     Commander
+	done          chan bool
 	sync.RWMutex
 }
 
@@ -30,6 +34,7 @@ func NewServer(args *Arguments, commander Commander) *Server {
 	unregister := make(chan *Client)
 	publish := make(chan []byte)
 	clientMessage := make(chan *ClientMessage)
+	done := make(chan bool, 1)
 	return &Server{
 		args:          args,
 		clients:       clients,
@@ -38,6 +43,7 @@ func NewServer(args *Arguments, commander Commander) *Server {
 		publish:       publish,
 		clientMessage: clientMessage,
 		commander:     commander,
+		done:          done,
 	}
 }
 
@@ -108,23 +114,30 @@ func (server *Server) Start() error {
 	printGreenColor(Banner)
 	printYellowColor(fmt.Sprintf("log -> kece server listen on port : %s\n", server.args.Port))
 
-	defer func() { //https://blog.learngoprogramming.com/5-gotchas-of-defer-in-go-golang-part-iii-36a1ab3d6ef1
+	defer func() {
 		err := listener.Close()
 		if err != nil {
 			log.Printf("Failed to close listener. Err: %v", err)
 		}
 	}()
 
-	done := make(chan bool)
+	kill := make(chan os.Signal, 1)
+
+	// notify when user interrupt the process
+	signal.Notify(kill, syscall.SIGINT, syscall.SIGTERM)
+
 	// handle concurrent client
 	go server.serveClient()
+
+	go server.waitOSNotify(kill)
 
 	// handle concurrent incoming client
 	go func() {
 		for {
 			c, err := listener.Accept()
 			if err != nil {
-				panic(err)
+				fmt.Println("server stopped")
+				return
 			}
 
 			//register to every connected client to DB
@@ -132,10 +145,21 @@ func (server *Server) Start() error {
 		}
 	}()
 
-	<-done
+	<-server.done
 
 	return nil
 
+}
+
+func (server *Server) waitOSNotify(kill chan os.Signal) {
+	for {
+		select {
+		case <-kill:
+			fmt.Println("server daemon interrupted")
+			server.done <- true
+			return
+		}
+	}
 }
 
 func validateAuth(cm *ClientMessage, commander Commander, auth string) error {
