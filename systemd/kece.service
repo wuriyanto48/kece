@@ -1,0 +1,16 @@
+[Unit]
+Description=An Experimental distributed Key Value Store written in pure Go
+Documentation=https://github.com/wuriyanto48/kece/blob/master/README.md
+After=network.target
+
+[Service]
+EnvironmentFile=/home/vagrant/kece/kece.conf
+Type=simple
+User=vagrant
+ExecStart=/home/vagrant/kece/kece -port ${PORT} -auth ${AUTH}
+StandardOutput=file:/var/log/kece.log
+StandardError=file:/var/log/kece-error.log
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
